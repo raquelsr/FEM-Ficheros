@@ -50,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
             TextView textView = (TextView) findViewById(R.id.textView);
             BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput(MI_FICHERO)));
             String linea = fin.readLine();
-            textView.setText(linea);
-            System.out.println(linea);
+            while (linea != null){
+                textView.append(linea + '\n');
+                linea = fin.readLine();
+            }
             fin.close();
             Toast.makeText(this, "El fichero se ha abierto", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
