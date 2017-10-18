@@ -1,6 +1,8 @@
 package fem.miw.upm.es.ejemploficheros;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 guardarFichero();
                 break;
             case R.id.opcionBorrar:
-                mostrarDialogo();
+                DialogFragment dialogoBorrar = new BorrarDialogFragment();
+                dialogoBorrar.show(getFragmentManager(), "borrar");
                 break;
         }
         return true;
@@ -81,31 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void mostrarDialogo(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirmación")
-                .setMessage("¿Desea eliminar el fichero?")
-                .setPositiveButton("Sí",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                borrarFichero();
-                            }
-                        }
-                )
-                .setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Acción opción No
-                            }
-                        }
-                );
-
-        builder.create().show();
-    }
-
-    private void borrarFichero() {
+    public void borrarFichero() {
         try {
             FileOutputStream fos = openFileOutput(MI_FICHERO, Context.MODE_PRIVATE);
             fos.close();
