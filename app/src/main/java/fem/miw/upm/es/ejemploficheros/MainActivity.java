@@ -1,6 +1,8 @@
 package fem.miw.upm.es.ejemploficheros;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opcionGuardar:
                 guardarFichero();
                 break;
+            case R.id.opcionBorrar:
+                mostrarDialogo();
+                break;
         }
         return true;
     }
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             TextView textView = (TextView) findViewById(R.id.textView);
             BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput(MI_FICHERO)));
+            textView.setText("");
             String linea = fin.readLine();
             while (linea != null){
                 textView.append(linea + '\n');
@@ -68,9 +74,47 @@ public class MainActivity extends AppCompatActivity {
             fos.write(editText.getText().toString().getBytes());
             fos.write('\n');
             fos.close();
+            abrirFichero();
             Toast.makeText(this, "El fichero ha sido guardado", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void mostrarDialogo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmación")
+                .setMessage("¿Desea eliminar el fichero?")
+                .setPositiveButton("Sí",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                borrarFichero();
+                            }
+                        }
+                )
+                .setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // Acción opción No
+                            }
+                        }
+                );
+
+        builder.create().show();
+    }
+
+    private void borrarFichero() {
+        try {
+            FileOutputStream fos = openFileOutput(MI_FICHERO, Context.MODE_PRIVATE);
+            fos.close();
+            TextView textView = (TextView) findViewById(R.id.textView);
+            textView.setText("");
+            Toast.makeText(this, "El fichero ha sido borrado", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
